@@ -1,0 +1,6 @@
+# Pebble SDK / Waf build output
+/build/
+/.lock-waf_*
+
+# macOS metadata
+.DS_Store

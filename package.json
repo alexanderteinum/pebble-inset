@@ -1,0 +1,66 @@
+{
+  "name": "offset",
+  "author": "Alexander Teinum",
+  "version": "0.1.0",
+  "keywords": [
+    "pebble-watchface"
+  ],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "Offset",
+    "uuid": "a968b556-580f-4493-8d1d-101872bf0c7f",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "aplite",
+      "basalt",
+      "chalk",
+      "diorite",
+      "emery",
+      "flint",
+      "gabbro"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "messageKeys": [],
+    "resources": {
+      "media": [
+        {
+          "type": "font",
+          "name": "FONT_ROBOTO_MEDIUM_42",
+          "file": "fonts/Roboto-Medium.ttf",
+          "characterRegex": "[0-9:]"
+        },
+        {
+          "type": "font",
+          "name": "FONT_ROBOTO_MEDIUM_21",
+          "file": "fonts/Roboto-Medium.ttf",
+          "characterRegex": "[0-9A-Za-z ]"
+        },
+        {
+          "type": "font",
+          "name": "FONT_ROBOTO_MEDIUM_48",
+          "file": "fonts/Roboto-Medium.ttf",
+          "characterRegex": "[0-9:]",
+          "targetPlatforms": [
+            "emery",
+            "gabbro"
+          ]
+        },
+        {
+          "type": "font",
+          "name": "FONT_ROBOTO_MEDIUM_24",
+          "file": "fonts/Roboto-Medium.ttf",
+          "characterRegex": "[0-9A-Za-z ]",
+          "targetPlatforms": [
+            "emery",
+            "gabbro"
+          ]
+        }
+      ]
+    }
+  },
+  "license": "MIT"
+}
