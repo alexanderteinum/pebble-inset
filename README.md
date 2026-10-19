@@ -2,6 +2,8 @@
 
 A minimal Pebble watchface with right-aligned time and date, and a vertical battery indicator.
 
+![Offset screenshot](screenshot.png)
+
 Uses the watch’s 12/24-hour setting and shows the date as `Jun 12`. Supports all Pebble models, with larger text on Emery and Gabbro. No configuration, animations, or network requests.
 
 ## Inspiration
