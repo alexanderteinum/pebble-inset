@@ -4,7 +4,11 @@ A minimal Pebble watchface, neatly inset from the edge.
 
 ![Inset screenshot](screenshot.png)
 
-Uses the watch’s 12/24-hour setting and shows the date as `Jun 12`. Supports all Pebble models, with larger text on Emery and Gabbro. No configuration, animations, or network requests.
+Time and date are right-aligned, with a slim battery indicator on the right. Uses
+the watch’s 12/24-hour setting and shows the date as `Jun 12`.
+
+Supports all Pebble models, with larger text on Emery and Gabbro. No configuration,
+animations, or network requests.
 
 ## Inspiration
 
