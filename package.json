@@ -1,5 +1,5 @@
 {
-  "name": "offset",
+  "name": "align-right",
   "author": "Alexander Teinum",
   "version": "0.1.0",
   "keywords": [
@@ -8,7 +8,7 @@
   "private": true,
   "dependencies": {},
   "pebble": {
-    "displayName": "Offset",
+    "displayName": "AlignRight",
     "uuid": "a968b556-580f-4493-8d1d-101872bf0c7f",
     "sdkVersion": "3",
     "enableMultiJS": true,
