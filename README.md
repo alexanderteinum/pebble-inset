@@ -1,6 +1,6 @@
 # Inset
 
-A minimal Pebble watchface with right-aligned time and date, and a vertical battery indicator.
+A minimal Pebble watchface, neatly inset from the edge.
 
 ![Inset screenshot](screenshot.png)
 
