@@ -23,6 +23,10 @@ pebble build
 pebble install --cloudpebble
 ```
 
+## Development
+
+Built with assistance from Codex.
+
 ## License
 
 [MIT](LICENSE) © 2026 Alexander Teinum.
