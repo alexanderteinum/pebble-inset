@@ -1,4 +1,5 @@
 #include <pebble.h>
+#include "message_keys.auto.h"
 
 static Window *s_window;
 static Layer *s_face;
@@ -7,6 +8,34 @@ static GFont s_date_font;
 static char s_time[8];
 static char s_date[7];
 static BatteryChargeState s_battery;
+static bool s_dark_mode;
+
+enum { SETTINGS_DARK_MODE = 1 };
+
+static GColor background_color(void) {
+  return s_dark_mode ? GColorBlack : GColorWhite;
+}
+
+static GColor foreground_color(void) {
+  return s_dark_mode ? GColorWhite : GColorBlack;
+}
+
+static void inbox_received(DictionaryIterator *iterator, void *context) {
+  Tuple *theme = dict_find(iterator, MESSAGE_KEY_DarkMode);
+  if (!theme || (theme->type != TUPLE_INT && theme->type != TUPLE_UINT)) {
+    return;
+  }
+  bool dark_mode = theme->value->int32 != 0;
+  if (dark_mode == s_dark_mode) {
+    return;
+  }
+  s_dark_mode = dark_mode;
+  persist_write_bool(SETTINGS_DARK_MODE, s_dark_mode);
+  window_set_background_color(s_window, background_color());
+  if (s_face) {
+    layer_mark_dirty(s_face);
+  }
+}
 
 static void update_time(void) {
   time_t now = time(NULL);
@@ -34,17 +63,17 @@ static void draw_battery(GContext *ctx, int16_t x, int16_t top, int16_t bottom) 
   const int16_t fill_top = bottom + 1 - filled_height;
 
 #ifdef PBL_COLOR
-  graphics_context_set_fill_color(ctx, GColorLightGray);
+  graphics_context_set_fill_color(ctx, s_dark_mode ? GColorDarkGray : GColorLightGray);
   graphics_fill_rect(ctx, GRect(x, top, width, height), 0, GCornerNone);
 #else
-  graphics_context_set_fill_color(ctx, GColorWhite);
+  graphics_context_set_fill_color(ctx, background_color());
   graphics_fill_rect(ctx, GRect(x, top, width, height), 0, GCornerNone);
-  graphics_context_set_fill_color(ctx, GColorBlack);
+  graphics_context_set_fill_color(ctx, foreground_color());
   for (int16_t y = top; y + 1 < fill_top; y += 4) {
     graphics_fill_rect(ctx, GRect(x, y, width, 2), 0, GCornerNone);
   }
 #endif
-  graphics_context_set_fill_color(ctx, GColorBlack);
+  graphics_context_set_fill_color(ctx, foreground_color());
   if (filled_height > 0) {
     graphics_fill_rect(ctx, GRect(x, fill_top, width, filled_height), 0, GCornerNone);
   }
@@ -75,7 +104,7 @@ static void draw_face(Layer *layer, GContext *ctx) {
   const int16_t battery_x = bounds.size.w - battery_gap - battery_width;
   const int16_t text_right_bearing = 1;
   const int16_t text_width = battery_x - battery_gap + text_right_bearing;
-  graphics_context_set_text_color(ctx, GColorBlack);
+  graphics_context_set_text_color(ctx, foreground_color());
   graphics_draw_text(ctx, s_time, s_time_font,
                      GRect(0, time_y, text_width, time_glyph_top + time_glyph_height + 4),
                      GTextOverflowModeTrailingEllipsis, GTextAlignmentRight, NULL);
@@ -120,18 +149,23 @@ static void window_unload(Window *window) {
 }
 
 int main(void) {
+  s_dark_mode = !persist_exists(SETTINGS_DARK_MODE) ||
+                persist_read_bool(SETTINGS_DARK_MODE);
   s_battery = battery_state_service_peek();
   s_window = window_create();
-  window_set_background_color(s_window, GColorWhite);
+  window_set_background_color(s_window, background_color());
   window_set_window_handlers(s_window, (WindowHandlers) {
     .load = window_load,
     .unload = window_unload,
   });
   window_stack_push(s_window, false);
+  app_message_register_inbox_received(inbox_received);
+  app_message_open(128, 128);
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
   battery_state_service_subscribe(battery_handler);
   app_event_loop();
   tick_timer_service_unsubscribe();
   battery_state_service_unsubscribe();
+  app_message_deregister_callbacks();
   window_destroy(s_window);
 }

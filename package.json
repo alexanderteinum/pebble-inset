@@ -6,7 +6,9 @@
     "pebble-watchface"
   ],
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "@rebble/clay": "^1.1.0"
+  },
   "pebble": {
     "displayName": "Inset",
     "uuid": "a968b556-580f-4493-8d1d-101872bf0c7f",
@@ -24,7 +26,9 @@
     "watchapp": {
       "watchface": true
     },
-    "messageKeys": [],
+    "messageKeys": [
+      "DarkMode"
+    ],
     "resources": {
       "media": [
         {
@@ -60,7 +64,10 @@
           ]
         }
       ]
-    }
+    },
+    "capabilities": [
+      "configurable"
+    ]
   },
   "license": "MIT"
 }

@@ -1,0 +1,22 @@
+[
+  {
+    "type": "heading",
+    "defaultValue": "Inset"
+  },
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "toggle",
+        "messageKey": "DarkMode",
+        "label": "Dark mode",
+        "defaultValue": true,
+        "description": "White text on a black background."
+      }
+    ]
+  },
+  {
+    "type": "submit",
+    "defaultValue": "Save"
+  }
+]

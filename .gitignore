@@ -4,3 +4,6 @@
 
 # macOS metadata
 .DS_Store
+
+# JavaScript dependencies
+/node_modules/
