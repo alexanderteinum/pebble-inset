@@ -9,6 +9,8 @@ static char s_time[8];
 static char s_date[7];
 static BatteryChargeState s_battery;
 static bool s_dark_mode;
+static bool s_phone_connected;
+static bool s_quiet_time;
 
 enum { SETTINGS_DARK_MODE = 1 };
 
@@ -79,6 +81,44 @@ static void draw_battery(GContext *ctx, int16_t x, int16_t top, int16_t bottom) 
   }
 }
 
+static void draw_status_icon(GContext *ctx, GPoint origin, bool disconnected) {
+  static const uint16_t disconnected_pixels[] = {
+    0x0000, 0x00C0, 0x01C4, 0x03CE, 0x0E9C, 0x1CB8,
+    0x0E30, 0x0670, 0x00E0, 0x01C0, 0x03B0, 0x0778,
+    0x06DC, 0x0EC8, 0x1DC0, 0x39C0, 0x10C0, 0x0000,
+  };
+  static const uint16_t quiet_pixels[] = {
+    0x0000, 0x0000, 0x0020, 0x0038, 0x001C, 0x001E,
+    0x001E, 0x001F, 0x003F, 0x003F, 0x007F, 0x00FE,
+    0x03FE, 0x0FFC, 0x07F8, 0x01E0, 0x0000, 0x0000,
+  };
+  const uint16_t *pixels = disconnected ? disconnected_pixels : quiet_pixels;
+  graphics_context_set_fill_color(ctx, foreground_color());
+  for (int16_t row = 0; row < 18; ++row) {
+    for (int16_t col = 0; col < 14; ++col) {
+      if (!(pixels[row] & (1 << col))) {
+        continue;
+      }
+      graphics_fill_rect(ctx, GRect(origin.x + col, origin.y + row, 1, 1),
+                         0, GCornerNone);
+    }
+  }
+}
+
+static void connection_handler(bool connected) {
+  s_phone_connected = connected;
+  if (s_face) {
+    layer_mark_dirty(s_face);
+  }
+}
+
+static void focus_handler(bool focused) {
+  if (focused) {
+    s_quiet_time = quiet_time_is_active();
+    update_time();
+  }
+}
+
 static void draw_face(Layer *layer, GContext *ctx) {
   GRect bounds = layer_get_bounds(layer);
 #if defined(PBL_PLATFORM_EMERY) || defined(PBL_PLATFORM_GABBRO)
@@ -113,9 +153,25 @@ static void draw_face(Layer *layer, GContext *ctx) {
                      GTextOverflowModeTrailingEllipsis, GTextAlignmentRight, NULL);
 
   draw_battery(ctx, battery_x, group_top, group_top + group_height - 1);
+  const GSize date_size = graphics_text_layout_get_content_size(
+      s_date, s_date_font,
+      GRect(0, date_y, text_width, date_glyph_top + date_glyph_height + 4),
+      GTextOverflowModeTrailingEllipsis, GTextAlignmentRight);
+  const int16_t icon_width = 14;
+  const int16_t icon_gap = 6;
+  const int16_t status_y = group_top + (date_glyph_height - 18) / 2;
+  int16_t status_right = text_width - date_size.w - 8;
+  if (s_quiet_time) {
+    draw_status_icon(ctx, GPoint(status_right - icon_width, status_y), false);
+    status_right -= icon_width + icon_gap;
+  }
+  if (!s_phone_connected) {
+    draw_status_icon(ctx, GPoint(status_right - icon_width, status_y), true);
+  }
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
+  s_quiet_time = quiet_time_is_active();
   update_time();
 }
 
@@ -150,6 +206,8 @@ static void window_unload(Window *window) {
 
 int main(void) {
   s_dark_mode = persist_read_bool(SETTINGS_DARK_MODE);
+  s_phone_connected = connection_service_peek_pebble_app_connection();
+  s_quiet_time = quiet_time_is_active();
   s_battery = battery_state_service_peek();
   s_window = window_create();
   window_set_background_color(s_window, background_color());
@@ -162,9 +220,15 @@ int main(void) {
   app_message_open(128, 128);
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
   battery_state_service_subscribe(battery_handler);
+  connection_service_subscribe((ConnectionHandlers) {
+    .pebble_app_connection_handler = connection_handler,
+  });
+  app_focus_service_subscribe(focus_handler);
   app_event_loop();
   tick_timer_service_unsubscribe();
   battery_state_service_unsubscribe();
+  connection_service_unsubscribe();
+  app_focus_service_unsubscribe();
   app_message_deregister_callbacks();
   window_destroy(s_window);
 }
