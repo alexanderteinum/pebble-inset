@@ -149,8 +149,7 @@ static void window_unload(Window *window) {
 }
 
 int main(void) {
-  s_dark_mode = !persist_exists(SETTINGS_DARK_MODE) ||
-                persist_read_bool(SETTINGS_DARK_MODE);
+  s_dark_mode = persist_read_bool(SETTINGS_DARK_MODE);
   s_battery = battery_state_service_peek();
   s_window = window_create();
   window_set_background_color(s_window, background_color());

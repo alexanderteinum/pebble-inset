@@ -10,7 +10,7 @@
         "type": "toggle",
         "messageKey": "DarkMode",
         "label": "Dark mode",
-        "defaultValue": true,
+        "defaultValue": false,
         "description": "White text on a black background."
       }
     ]
