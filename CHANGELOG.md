@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0 – 2026-10-22
+
+- Show Bluetooth disconnect and Quiet Time icons beside the date.
+
 ## 0.2.1 – 2026-10-21
 
 - Use light mode by default.
