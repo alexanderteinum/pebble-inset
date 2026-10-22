@@ -8,9 +8,7 @@ Time and date are right-aligned, with a slim battery indicator on the right. Use
 
 Status icons beside the date appear when Bluetooth is disconnected or Quiet Time is active.
 
-Light by default, with dark mode available in the Pebble app settings. Supports all Pebble models, with larger text on Time 2 and Round 2.
-
-Optional vibration on phone disconnect can be enabled in settings. Off by default; respects Quiet Time.
+Light by default, with dark mode and optional disconnect vibration available in the Pebble app settings. Supports all Pebble models, with larger text on Time 2 and Round 2.
 
 ## Inspiration
 

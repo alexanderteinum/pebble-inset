@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0 – 2026-10-22
+
+- Use Open Sans Medium for time and date.
+- Add optional vibration on phone disconnect, off by default and silent during Quiet Time.
+
 ## 0.3.0 – 2026-10-22
 
 - Show Bluetooth disconnect and Quiet Time icons beside the date.
