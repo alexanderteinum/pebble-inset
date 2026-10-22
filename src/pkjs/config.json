@@ -12,6 +12,13 @@
         "label": "Dark mode",
         "defaultValue": false,
         "description": "White text on a black background."
+      },
+      {
+        "type": "toggle",
+        "messageKey": "VibrateOnDisconnect",
+        "label": "Vibrate on disconnect",
+        "defaultValue": false,
+        "description": "A short vibration when the phone disconnects. Silent during Quiet Time."
       }
     ]
   },

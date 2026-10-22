@@ -10,6 +10,8 @@ Status icons beside the date appear when Bluetooth is disconnected or Quiet Time
 
 Light by default, with dark mode available in the Pebble app settings. Supports all Pebble models, with larger text on Time 2 and Round 2.
 
+Optional vibration on phone disconnect can be enabled in settings. Off by default; respects Quiet Time.
+
 ## Inspiration
 
 Inset’s design is inspired by Simple, which was inspired by Blotch and Marked 2.

@@ -26,9 +26,10 @@
     "watchapp": {
       "watchface": true
     },
-    "messageKeys": [
-      "DarkMode"
-    ],
+    "messageKeys": {
+      "DarkMode": 10000,
+      "VibrateOnDisconnect": 10001
+    },
     "resources": {
       "media": [
         {
