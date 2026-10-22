@@ -33,20 +33,20 @@
       "media": [
         {
           "type": "font",
-          "name": "FONT_ROBOTO_MEDIUM_42",
-          "file": "fonts/Roboto-Medium.ttf",
+          "name": "FONT_OPEN_SANS_MEDIUM_42",
+          "file": "fonts/OpenSans-Medium.ttf",
           "characterRegex": "[0-9:]"
         },
         {
           "type": "font",
-          "name": "FONT_ROBOTO_MEDIUM_21",
-          "file": "fonts/Roboto-Medium.ttf",
+          "name": "FONT_OPEN_SANS_MEDIUM_21",
+          "file": "fonts/OpenSans-Medium.ttf",
           "characterRegex": "[0-9A-Za-z ]"
         },
         {
           "type": "font",
-          "name": "FONT_ROBOTO_MEDIUM_48",
-          "file": "fonts/Roboto-Medium.ttf",
+          "name": "FONT_OPEN_SANS_MEDIUM_48",
+          "file": "fonts/OpenSans-Medium.ttf",
           "characterRegex": "[0-9:]",
           "targetPlatforms": [
             "emery",
@@ -55,8 +55,8 @@
         },
         {
           "type": "font",
-          "name": "FONT_ROBOTO_MEDIUM_24",
-          "file": "fonts/Roboto-Medium.ttf",
+          "name": "FONT_OPEN_SANS_MEDIUM_24",
+          "file": "fonts/OpenSans-Medium.ttf",
           "characterRegex": "[0-9A-Za-z ]",
           "targetPlatforms": [
             "emery",
