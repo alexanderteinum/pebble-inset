@@ -9,11 +9,11 @@ static char s_time[8];
 static char s_date[7];
 static BatteryChargeState s_battery;
 static bool s_dark_mode;
-static bool s_vibrate_on_disconnect;
+static bool s_vibrate_on_connection_change;
 static bool s_phone_connected;
 static bool s_quiet_time;
 
-enum { SETTINGS_DARK_MODE = 1, SETTINGS_VIBRATE_ON_DISCONNECT };
+enum { SETTINGS_DARK_MODE = 1, SETTINGS_VIBRATE_ON_CONNECTION_CHANGE };
 
 static GColor background_color(void) {
   return s_dark_mode ? GColorBlack : GColorWhite;
@@ -32,8 +32,8 @@ static void inbox_received(DictionaryIterator *iterator, void *context) {
   }
   Tuple *vibrate = dict_find(iterator, MESSAGE_KEY_VibrateOnDisconnect);
   if (vibrate && (vibrate->type == TUPLE_INT || vibrate->type == TUPLE_UINT)) {
-    s_vibrate_on_disconnect = vibrate->value->int32 != 0;
-    persist_write_bool(SETTINGS_VIBRATE_ON_DISCONNECT, s_vibrate_on_disconnect);
+    s_vibrate_on_connection_change = vibrate->value->int32 != 0;
+    persist_write_bool(SETTINGS_VIBRATE_ON_CONNECTION_CHANGE, s_vibrate_on_connection_change);
   }
   if (s_face) {
     layer_mark_dirty(s_face);
@@ -107,7 +107,7 @@ static void draw_status_icon(GContext *ctx, GPoint origin, bool disconnected) {
 }
 
 static void connection_handler(bool connected) {
-  if (s_phone_connected && !connected && s_vibrate_on_disconnect &&
+  if (s_phone_connected != connected && s_vibrate_on_connection_change &&
       !quiet_time_is_active()) {
     vibes_short_pulse();
   }
@@ -211,7 +211,7 @@ static void window_unload(Window *window) {
 
 int main(void) {
   s_dark_mode = persist_read_bool(SETTINGS_DARK_MODE);
-  s_vibrate_on_disconnect = persist_read_bool(SETTINGS_VIBRATE_ON_DISCONNECT);
+  s_vibrate_on_connection_change = persist_read_bool(SETTINGS_VIBRATE_ON_CONNECTION_CHANGE);
   s_phone_connected = connection_service_peek_pebble_app_connection();
   s_quiet_time = quiet_time_is_active();
   s_battery = battery_state_service_peek();

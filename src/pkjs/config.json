@@ -16,9 +16,9 @@
       {
         "type": "toggle",
         "messageKey": "VibrateOnDisconnect",
-        "label": "Vibrate on disconnect",
+        "label": "Vibrate on connection change",
         "defaultValue": false,
-        "description": "A short vibration when the phone disconnects. Silent during Quiet Time."
+        "description": "A short vibration when the phone connection changes. Silent during Quiet Time."
       }
     ]
   },
