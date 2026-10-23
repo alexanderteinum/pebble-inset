@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1 – 2026-10-23
+
+- Vibrate on both phone connection and disconnection when enabled, respecting Quiet Time.
+- Rename the setting to “Vibrate on connection change”.
+
 ## 0.4.0 – 2026-10-22
 
 - Use Open Sans Medium for time and date.
