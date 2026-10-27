@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0 – 2026-10-27
+
+- Increase time and date font sizes on Pebble Time 2 and Round 2.
+- Add more space between status icons on Time 2 and Round 2.
+
 ## 0.4.1 – 2026-10-23
 
 - Vibrate on both phone connection and disconnection when enabled, respecting Quiet Time.
