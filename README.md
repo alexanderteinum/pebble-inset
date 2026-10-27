@@ -2,6 +2,8 @@
 
 A minimal Pebble watchface, neatly inset from the edge.
 
+![Inset screenshot](screenshot.png)
+
 Right-aligned time and date with a slim battery indicator. Follows your 12/24-hour setting, with icons for Bluetooth disconnection and Quiet Time.
 
 Light by default. Dark mode and vibration on connection changes are available in settings. Supports all Pebble models, with larger text on Time 2 and Round 2.
