@@ -23,6 +23,12 @@ static GColor foreground_color(void) {
   return s_dark_mode ? GColorWhite : GColorBlack;
 }
 
+#ifdef PBL_COLOR
+static GColor dimmed_color(void) {
+  return s_dark_mode ? GColorDarkGray : GColorLightGray;
+}
+#endif
+
 static void inbox_received(DictionaryIterator *iterator, void *context) {
   Tuple *theme = dict_find(iterator, MESSAGE_KEY_DarkMode);
   if (theme && (theme->type == TUPLE_INT || theme->type == TUPLE_UINT)) {
@@ -66,7 +72,7 @@ static void draw_battery(GContext *ctx, int16_t x, int16_t top, int16_t bottom) 
   const int16_t fill_top = bottom + 1 - filled_height;
 
 #ifdef PBL_COLOR
-  graphics_context_set_fill_color(ctx, s_dark_mode ? GColorDarkGray : GColorLightGray);
+  graphics_context_set_fill_color(ctx, dimmed_color());
   graphics_fill_rect(ctx, GRect(x, top, width, height), 0, GCornerNone);
 #else
   graphics_context_set_fill_color(ctx, background_color());
@@ -82,25 +88,35 @@ static void draw_battery(GContext *ctx, int16_t x, int16_t top, int16_t bottom) 
   }
 }
 
-static void draw_status_icon(GContext *ctx, GPoint origin, bool disconnected) {
-  static const uint16_t disconnected_pixels[] = {
-    0x0000, 0x00C0, 0x01C4, 0x03CE, 0x0E9C, 0x1CB8,
-    0x0E30, 0x0670, 0x00E0, 0x01C0, 0x03B0, 0x0778,
-    0x06DC, 0x0EC8, 0x1DC0, 0x39C0, 0x10C0, 0x0000,
+static void draw_status_icon(GContext *ctx, GPoint origin, bool bluetooth, bool active) {
+  static const uint16_t bluetooth_pixels[] = {
+    0x0000, 0x00C0, 0x01C0, 0x03C0, 0x06D8, 0x0CF0,
+    0x06E0, 0x03C0, 0x01C0, 0x01C0, 0x03C0, 0x06E0,
+    0x0CF0, 0x06D8, 0x03C0, 0x01C0, 0x00C0, 0x0000,
   };
   static const uint16_t quiet_pixels[] = {
     0x0000, 0x0000, 0x0020, 0x0038, 0x001C, 0x001E,
     0x001E, 0x001F, 0x003F, 0x003F, 0x007F, 0x00FE,
     0x03FE, 0x0FFC, 0x07F8, 0x01E0, 0x0000, 0x0000,
   };
-  const uint16_t *pixels = disconnected ? disconnected_pixels : quiet_pixels;
+  const uint16_t *pixels = bluetooth ? bluetooth_pixels : quiet_pixels;
+#ifdef PBL_COLOR
+  graphics_context_set_fill_color(ctx, active ? foreground_color() : dimmed_color());
+#else
   graphics_context_set_fill_color(ctx, foreground_color());
+#endif
   for (int16_t row = 0; row < 18; ++row) {
     for (int16_t col = 0; col < 14; ++col) {
       if (!(pixels[row] & (1 << col))) {
         continue;
       }
-      graphics_fill_rect(ctx, GRect(origin.x + col, origin.y + row, 1, 1),
+#ifndef PBL_COLOR
+      // Monochrome displays approximate the inactive shade with a 50% stipple.
+      if (!active && ((origin.x + col + origin.y + row) & 1)) {
+        continue;
+      }
+#endif
+      graphics_fill_rect(ctx, GRect(origin.x + col - (bluetooth ? 3 : 0), origin.y + row, 1, 1),
                          0, GCornerNone);
     }
   }
@@ -121,6 +137,25 @@ static void focus_handler(bool focused) {
   if (focused) {
     s_quiet_time = quiet_time_is_active();
     update_time();
+  }
+}
+
+// Left bearings of the month initials in the bundled Open Sans Medium font.
+// Layout width includes this padding (or overhang for J); icon gaps should not.
+static int16_t date_left_bearing(void) {
+#if defined(PBL_PLATFORM_EMERY) || defined(PBL_PLATFORM_GABBRO)
+  const int16_t normal_bearing = 3;
+  const int16_t o_bearing = 2;
+#else
+  const int16_t normal_bearing = 2;
+  const int16_t o_bearing = 1;
+#endif
+  switch (s_date[0]) {
+    case 'J': return -2;
+    case 'A': return 0;
+    case 'S': return 1;
+    case 'O': return o_bearing;
+    default: return normal_bearing;
   }
 }
 
@@ -162,21 +197,18 @@ static void draw_face(Layer *layer, GContext *ctx) {
       s_date, s_date_font,
       GRect(0, date_y, text_width, date_glyph_top + date_glyph_height + 4),
       GTextOverflowModeTrailingEllipsis, GTextAlignmentRight);
-  const int16_t icon_width = 14;
+  const int16_t bluetooth_width = 9;
+  const int16_t quiet_width = 12;
 #if defined(PBL_PLATFORM_EMERY) || defined(PBL_PLATFORM_GABBRO)
   const int16_t icon_gap = 10;
 #else
-  const int16_t icon_gap = 6;
+  const int16_t icon_gap = 8;
 #endif
   const int16_t status_y = group_top + (date_glyph_height - 18) / 2;
-  int16_t status_right = text_width - date_size.w - 8;
-  if (s_quiet_time) {
-    draw_status_icon(ctx, GPoint(status_right - icon_width, status_y), false);
-    status_right -= icon_width + icon_gap;
-  }
-  if (!s_phone_connected) {
-    draw_status_icon(ctx, GPoint(status_right - icon_width, status_y), true);
-  }
+  int16_t status_right = text_width - date_size.w + date_left_bearing() - icon_gap;
+  draw_status_icon(ctx, GPoint(status_right - bluetooth_width, status_y), true, s_phone_connected);
+  status_right -= bluetooth_width + icon_gap;
+  draw_status_icon(ctx, GPoint(status_right - quiet_width, status_y), false, s_quiet_time);
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
