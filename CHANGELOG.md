@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0 – 2026-10-27
+
+- Always show Bluetooth and Quiet Time icons, dimming inactive states to match the battery indicator.
+
 ## 0.5.0 – 2026-10-27
 
 - Increase time and date font sizes on Pebble Time 2 and Round 2.

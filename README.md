@@ -10,7 +10,7 @@ Light by default. Dark mode and vibration on connection changes are available in
 
 ## Inspiration
 
-Inset’s design is inspired by Simple, which was inspired by Blotch and Marked 2.
+Inset’s design is inspired by Simple, which was inspired by Blotch and Marked 2. Dimmed status icons were inspired by Able.
 
 ## Build & install
 
