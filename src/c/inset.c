@@ -128,10 +128,10 @@ static void draw_face(Layer *layer, GContext *ctx) {
   GRect bounds = layer_get_bounds(layer);
 #if defined(PBL_PLATFORM_EMERY) || defined(PBL_PLATFORM_GABBRO)
   const int16_t date_glyph_top = 7;
-  const int16_t date_glyph_height = 17;
-  const int16_t time_glyph_top = 14;
-  const int16_t time_glyph_height = 34;
-  const int16_t text_gap = 15;
+  const int16_t date_glyph_height = 28;
+  const int16_t time_glyph_top = 15;
+  const int16_t time_glyph_height = 42;
+  const int16_t text_gap = 17;
 #else
   const int16_t date_glyph_top = 6;
   const int16_t date_glyph_height = 15;
@@ -189,8 +189,8 @@ static void battery_handler(BatteryChargeState state) {
 
 static void window_load(Window *window) {
 #if defined(PBL_PLATFORM_EMERY) || defined(PBL_PLATFORM_GABBRO)
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_OPEN_SANS_MEDIUM_48));
-  s_date_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_OPEN_SANS_MEDIUM_24));
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_OPEN_SANS_MEDIUM_56));
+  s_date_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_OPEN_SANS_MEDIUM_28));
 #else
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_OPEN_SANS_MEDIUM_42));
   s_date_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_OPEN_SANS_MEDIUM_21));

@@ -46,7 +46,7 @@
         },
         {
           "type": "font",
-          "name": "FONT_OPEN_SANS_MEDIUM_48",
+          "name": "FONT_OPEN_SANS_MEDIUM_56",
           "file": "fonts/OpenSans-Medium.ttf",
           "characterRegex": "[0-9:]",
           "targetPlatforms": [
@@ -56,7 +56,7 @@
         },
         {
           "type": "font",
-          "name": "FONT_OPEN_SANS_MEDIUM_24",
+          "name": "FONT_OPEN_SANS_MEDIUM_28",
           "file": "fonts/OpenSans-Medium.ttf",
           "characterRegex": "[0-9A-Za-z ]",
           "targetPlatforms": [
