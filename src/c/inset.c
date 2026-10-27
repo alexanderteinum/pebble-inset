@@ -163,7 +163,11 @@ static void draw_face(Layer *layer, GContext *ctx) {
       GRect(0, date_y, text_width, date_glyph_top + date_glyph_height + 4),
       GTextOverflowModeTrailingEllipsis, GTextAlignmentRight);
   const int16_t icon_width = 14;
+#if defined(PBL_PLATFORM_EMERY) || defined(PBL_PLATFORM_GABBRO)
+  const int16_t icon_gap = 10;
+#else
   const int16_t icon_gap = 6;
+#endif
   const int16_t status_y = group_top + (date_glyph_height - 18) / 2;
   int16_t status_right = text_width - date_size.w - 8;
   if (s_quiet_time) {
