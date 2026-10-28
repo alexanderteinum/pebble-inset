@@ -175,18 +175,32 @@ static void draw_face(Layer *layer, GContext *ctx) {
   const int16_t text_gap = 13;
 #endif
   const int16_t group_height = date_glyph_height + time_glyph_height + text_gap;
-  const int16_t optical_offset = -3;
+  const int16_t optical_offset = 0;
   const int16_t group_top = (bounds.size.h - group_height) / 2 + optical_offset;
   const int16_t date_y = group_top - date_glyph_top;
   const int16_t time_y = group_top + date_glyph_height + text_gap - time_glyph_top;
   const int16_t battery_width = 3;
-  const int16_t battery_gap = PBL_IF_ROUND_ELSE(21, 9);
-  const int16_t battery_x = bounds.size.w - battery_gap - battery_width;
+#if defined(PBL_PLATFORM_EMERY) || defined(PBL_PLATFORM_GABBRO)
+  const int16_t battery_gap = 10;
+  const int16_t time_right_offset = 2;
+#else
+  const int16_t battery_gap = 8;
+  const int16_t time_right_offset = 1;
+#endif
+  // Account for the curved edge at the endpoints of the centered battery bar.
+#if defined(PBL_PLATFORM_GABBRO)
+  const int16_t battery_edge_gap = battery_gap + 7;
+#elif defined(PBL_PLATFORM_CHALK)
+  const int16_t battery_edge_gap = battery_gap + 4;
+#else
+  const int16_t battery_edge_gap = battery_gap;
+#endif
+  const int16_t battery_x = bounds.size.w - battery_edge_gap - battery_width;
   const int16_t text_right_bearing = 1;
   const int16_t text_width = battery_x - battery_gap + text_right_bearing;
   graphics_context_set_text_color(ctx, foreground_color());
   graphics_draw_text(ctx, s_time, s_time_font,
-                     GRect(0, time_y, text_width, time_glyph_top + time_glyph_height + 4),
+                     GRect(time_right_offset, time_y, text_width, time_glyph_top + time_glyph_height + 4),
                      GTextOverflowModeTrailingEllipsis, GTextAlignmentRight, NULL);
   graphics_draw_text(ctx, s_date, s_date_font,
                      GRect(0, date_y, text_width, date_glyph_top + date_glyph_height + 4),
