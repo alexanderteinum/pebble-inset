@@ -2,9 +2,7 @@
 
 ## 0.6.1 – 2026-10-28
 
-- Refine time alignment and battery margins across all models.
-- Match battery margins to the curved screen edge on Round and Round 2.
-- Remove the optical vertical offset for a centered layout.
+- Fine-tune spacing and alignment for a more balanced, pixel-perfect layout across all models.
 
 ## 0.6.0 – 2026-10-27
 
